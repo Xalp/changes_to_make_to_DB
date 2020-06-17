@@ -1,0 +1,16 @@
+1. change the name column in azure_bolb_container to container_name:
+
+ALTER TABLE azure_blob_container
+RENAME name TO container_name;
+
+2. change the name column in users to real_name:
+
+ALTER TABLE users
+RENAME name TO real_name;
+
+3. create a view called Final:
+
+CREATE or REPLACE VIEW Final AS
+    SELECT users.email, users.real_name, user_roles.role, roles.description, permissions.read, permissions.write, permissions.delete, permissions.list, azure_blob_containers.container_name
+    FROM users, roles, user_roles, permissions, azure_blob_containers
+    WHERE (users.email = user_roles.user) AND (user_roles.role = roles.name) AND (user_roles.role = permissions.role) AND (permissions.azure_blob_container = azure_blob_containers.id);
